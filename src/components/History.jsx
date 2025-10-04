@@ -24,7 +24,7 @@ const History = () => {
       setUser(loggedInUser);
 
       // Fetch donation history for the logged-in user
-      fetch(`https://givifybackend.onrender.com/donations/<email>/${loggedInUser.email}`)
+      fetch(`https://givifybackend.onrender.com/donations/${loggedInUser.email}`)
         .then((res) => res.json())
         .then((data) => {
           // Sort by date, most recent first
