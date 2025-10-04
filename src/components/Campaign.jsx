@@ -116,7 +116,7 @@ const Campaign = () => {
         donation_amount: Number.parseFloat(donationData.donation_amount),
       }
 
-      const response = await fetch("https://givifybackend.onrender.com/donations", {
+      const response = await fetch("https://givifybackend.onrender.com/donate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
