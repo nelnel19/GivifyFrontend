@@ -50,7 +50,7 @@ const Homepage = () => {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 10000) // 10s timeout
 
-      const campaignsResponse = await fetch("http://localhost:5000/campaigns", {
+      const campaignsResponse = await fetch("https://givifybackend.onrender.com/campaigns", {
         signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
