@@ -12,7 +12,7 @@ const Donations = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/donations/all")
+    fetch("https://givifybackend.onrender.com/donations/all")
       .then((res) => res.json())
       .then((data) => {
         const sortedDonations = data.sort((a, b) => b.donation_amount - a.donation_amount)

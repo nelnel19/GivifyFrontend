@@ -9,7 +9,7 @@ const Users = () => {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/auth/users");
+      const res = await fetch("https://givifybackend.onrender.com/api/auth/users");
       const data = await res.json();
       setUsers(data);
     } catch (err) {
@@ -35,7 +35,7 @@ const Users = () => {
   // Update user
   const handleUpdate = async (id) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/auth/users/${id}`, {
+      const res = await fetch(`https://givifybackend.onrender.com/api/auth/users/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -52,7 +52,7 @@ const Users = () => {
   // Disable user
   const handleDisable = async (id) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/auth/users/${id}/disable`, {
+      const res = await fetch(`https://givifybackend.onrender.com/api/auth/users/${id}/disable`, {
         method: "PATCH",
       });
       if (res.ok) {
@@ -66,7 +66,7 @@ const Users = () => {
   // Enable user
   const handleEnable = async (id) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/auth/users/${id}/enable`, {
+      const res = await fetch(`https://givifybackend.onrender.com/api/auth/users/${id}/enable`, {
         method: "PATCH",
       });
       if (res.ok) {

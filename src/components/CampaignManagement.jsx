@@ -14,7 +14,7 @@ const CampaignManagement = () => {
   // Fetch campaigns
   const fetchCampaigns = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:5000/campaigns");
+      const res = await fetch("https://givifybackend.onrender.com/campaigns");
       const data = await res.json();
       setCampaigns(data);
     } catch (err) {
@@ -45,7 +45,7 @@ const CampaignManagement = () => {
       data.append("goalAmount", formData.goalAmount);
       if (formData.image) data.append("image", formData.image);
 
-      const res = await fetch("http://127.0.0.1:5000/campaigns", {
+      const res = await fetch("https://givifybackend.onrender.com/campaigns", {
         method: "POST",
         body: data, // send as multipart/form-data
       });
@@ -79,7 +79,7 @@ const CampaignManagement = () => {
       data.append("goalAmount", formData.goalAmount);
       if (formData.image) data.append("image", formData.image);
 
-      const res = await fetch(`http://127.0.0.1:5000/campaigns/${editingId}`, {
+      const res = await fetch(`https://givifybackend.onrender.com/campaigns/${editingId}`, {
         method: "PUT",
         body: data,
       });
@@ -98,7 +98,7 @@ const CampaignManagement = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this campaign?")) return;
     try {
-      const res = await fetch(`http://127.0.0.1:5000/campaigns/${id}`, {
+      const res = await fetch(`https://givifybackend.onrender.com/campaigns/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {

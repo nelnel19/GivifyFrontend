@@ -7,7 +7,7 @@ const DonationManagement = () => {
   // Fetch donations
   const fetchDonations = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:5000/donations");
+      const res = await fetch("https://givifybackend.onrender.com/donations");
       const data = await res.json();
       setDonations(data);
     } catch (err) {
@@ -22,7 +22,7 @@ const DonationManagement = () => {
   // Update donation status
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/donations/${id}/status`, {
+      const res = await fetch(`https://givifybackend.onrender.com/donations/${id}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

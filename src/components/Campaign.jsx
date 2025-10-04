@@ -34,7 +34,7 @@ const Campaign = () => {
   })
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/campaigns")
+    fetch("https://givifybackend.onrender.com/campaigns")
       .then((res) => res.json())
       .then((data) => setCampaigns(data))
       .catch((error) => console.error("Error fetching campaigns:", error))
@@ -116,7 +116,7 @@ const Campaign = () => {
         donation_amount: Number.parseFloat(donationData.donation_amount),
       }
 
-      const response = await fetch("http://127.0.0.1:5000/donations", {
+      const response = await fetch("https://givifybackend.onrender.com/donations", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +128,7 @@ const Campaign = () => {
         alert("Donation successful! Thank you for your generosity.")
         handleCloseModal()
         // Refresh campaigns to update progress
-        const campaignsResponse = await fetch("http://127.0.0.1:5000/campaigns")
+        const campaignsResponse = await fetch("https://givifybackend.onrender.com/campaigns")
         const campaignsData = await campaignsResponse.json()
         setCampaigns(campaignsData)
       } else {
