@@ -1,0 +1,79 @@
+.users-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.users-table th,
+.users-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.users-table th {
+  background: #f4f4f4;
+}
+
+.row-disabled {
+  background-color: #ffecec;
+}
+
+.row-active {
+  background-color: #ecffec;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.status.active {
+  background-color: #d4fcd4;
+  color: #008000;
+}
+
+.status.disabled {
+  background-color: #fcd4d4;
+  color: #800000;
+}
+
+.btn {
+  margin: 2px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn.edit {
+  background: #007bff;
+  color: white;
+}
+
+.btn.save {
+  background: #28a745;
+  color: white;
+}
+
+.btn.disable {
+  background: #dc3545;
+  color: white;
+}
+
+.btn.enable {
+  background: #ffc107;
+  color: black;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}

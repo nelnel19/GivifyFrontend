@@ -1,0 +1,101 @@
+.campaign-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.campaign-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.campaign-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.campaign-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.campaign-form .btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.campaign-form .btn.create {
+  background: #28a745;
+  color: white;
+}
+
+.campaign-form .btn.save {
+  background: #007bff;
+  color: white;
+}
+
+.campaign-form .btn:hover {
+  opacity: 0.9;
+}
+
+.campaign-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.campaign-table th,
+.campaign-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.campaign-table th {
+  background: #f4f4f4;
+}
+
+.campaign-img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.btn.edit {
+  background: #ffc107;
+  border: none;
+  color: black;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn.edit:hover {
+  background: #e0a800;
+}
+
+.btn.delete {
+  background: #dc3545;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn.delete:hover {
+  background: #c82333;
+}
