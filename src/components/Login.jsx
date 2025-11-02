@@ -41,8 +41,12 @@ const Login = () => {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("lastLoggedInUser", JSON.stringify(data.user));
 
-        // Redirect to campaigns page
-        navigate("/homepage");
+        // Redirect based on user role
+        if (data.user.role === "admin") {
+          navigate("/Users");
+        } else {
+          navigate("/homepage");
+        }
       } else {
         // ❌ Backend returned an error
         alert(data.error || "Invalid email or password");

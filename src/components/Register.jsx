@@ -49,7 +49,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      await API.post("https://givifybackend.onrender.com/api/auth/register", {
+      await API.post("/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
