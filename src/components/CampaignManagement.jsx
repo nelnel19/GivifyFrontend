@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/campaignmanagement.css";
 
 const CampaignManagement = () => {
@@ -10,6 +11,7 @@ const CampaignManagement = () => {
     image: null, // now stores a File object
   });
   const [editingId, setEditingId] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch campaigns
   const fetchCampaigns = async () => {
@@ -109,95 +111,136 @@ const CampaignManagement = () => {
     }
   };
 
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("lastLoggedInUser");
+    navigate("/login");
+  };
+
+  // Navigate to users
+  const handleUsers = () => {
+    navigate("/Users");
+  };
+
+  // Navigate to donations
+  const handleDonations = () => {
+    navigate("/donationmanagement");
+  };
+
   return (
     <div className="campaign-container">
-      <h2>Campaign Management</h2>
-
-      {/* Form */}
-      <div className="campaign-form">
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="goalAmount"
-          placeholder="Goal Amount"
-          value={formData.goalAmount}
-          onChange={handleChange}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-        {editingId ? (
-          <button className="btn save" onClick={handleUpdate}>
-            Update Campaign
+      {/* Navigation Header */}
+      <div className="admin-navigation">
+        <div className="nav-brand">
+          <h2>Admin Dashboard</h2>
+        </div>
+        <div className="nav-links">
+          <button className="nav-btn" onClick={handleUsers}>
+            Users
           </button>
-        ) : (
-          <button className="btn create" onClick={handleCreate}>
-            Create Campaign
+          <button className="nav-btn active" onClick={() => navigate("/campaignmanagement")}>
+            Campaigns
           </button>
-        )}
+          <button className="nav-btn" onClick={handleDonations}>
+            Donations
+          </button>
+          <button className="nav-btn logout" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
 
-      {/* Campaigns List */}
-      <table className="campaign-table">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Goal</th>
-            <th>Collected</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {campaigns.length > 0 ? (
-            campaigns.map((campaign) => (
-              <tr key={campaign.id}>
-                <td>
-                  {campaign.image && (
-                    <img
-                      src={campaign.image}
-                      alt={campaign.title}
-                      className="campaign-img"
-                    />
-                  )}
-                </td>
-                <td>{campaign.title}</td>
-                <td>{campaign.description}</td>
-                <td>${campaign.goalAmount}</td>
-                <td>${campaign.collectedAmount}</td>
-                <td>
-                  <button className="btn edit" onClick={() => handleEdit(campaign)}>
-                    Edit
-                  </button>
-                  <button className="btn delete" onClick={() => handleDelete(campaign.id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
+      {/* Main Content */}
+      <div className="campaign-content">
+        <h2>Campaign Management</h2>
+
+        {/* Form */}
+        <div className="campaign-form">
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="goalAmount"
+            placeholder="Goal Amount"
+            value={formData.goalAmount}
+            onChange={handleChange}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          {editingId ? (
+            <button className="btn save" onClick={handleUpdate}>
+              Update Campaign
+            </button>
           ) : (
-            <tr>
-              <td colSpan="6">No campaigns found</td>
-            </tr>
+            <button className="btn create" onClick={handleCreate}>
+              Create Campaign
+            </button>
           )}
-        </tbody>
-      </table>
+        </div>
+
+        {/* Campaigns List */}
+        <table className="campaign-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Goal</th>
+              <th>Collected</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {campaigns.length > 0 ? (
+              campaigns.map((campaign) => (
+                <tr key={campaign.id}>
+                  <td>
+                    {campaign.image && (
+                      <img
+                        src={campaign.image}
+                        alt={campaign.title}
+                        className="campaign-img"
+                      />
+                    )}
+                  </td>
+                  <td>{campaign.title}</td>
+                  <td>{campaign.description}</td>
+                  <td>${campaign.goalAmount}</td>
+                  <td>${campaign.collectedAmount}</td>
+                  <td>
+                    <button className="btn edit" onClick={() => handleEdit(campaign)}>
+                      Edit
+                    </button>
+                    <button className="btn delete" onClick={() => handleDelete(campaign.id)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">No campaigns found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

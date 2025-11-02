@@ -24,7 +24,7 @@ function App() {
         <Route path="/campaigns" element={<Campaign />} />
         <Route path="/donations" element={<Donations />} />
         <Route path="/history" element={<History />} />
-        <Route path="/users" element={<Users />} /> {/* ✅ Added Users route */}
+        <Route path="/users" element={<Users />} /> 
         <Route path="/campaignmanagement" element={<CampaignManagement />} />
         <Route path="/donationmanagement" element={<DonationManagement />} />
       </Routes>

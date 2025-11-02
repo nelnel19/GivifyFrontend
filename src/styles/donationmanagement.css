@@ -29,3 +29,113 @@
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+/* Navigation Styles */
+.admin-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2c3e50;
+  padding: 1rem 2rem;
+  color: white;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+}
+
+.nav-brand h2 {
+  margin: 0;
+  color: white;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: #2980b9;
+}
+
+.nav-btn.active {
+  background: #2980b9;
+  font-weight: bold;
+}
+
+.nav-btn.logout {
+  background: #e74c3c;
+}
+
+.nav-btn.logout:hover {
+  background: #c0392b;
+}
+
+/* Main content adjustment */
+.donation-content {
+  padding: 0 1rem;
+}
+
+.donation-content h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-navigation {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-btn {
+    font-size: 12px;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+/* Existing donation styles remain the same */
+.donation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.donation-table th,
+.donation-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.donation-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.donation-table select {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.donation-table tr:hover {
+  background-color: #f8f9fa;
+}
