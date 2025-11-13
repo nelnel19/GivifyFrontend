@@ -8,6 +8,10 @@ import {
   History as HistoryIcon,
   Calendar,
   CreditCard,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../styles/history.css";
@@ -67,6 +71,86 @@ const History = () => {
       minute: "2-digit",
     });
   };
+
+  // Get status badge with appropriate styling
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      'completed': {
+        icon: CheckCircle,
+        color: '#059669',
+        bgColor: 'rgba(5, 150, 105, 0.1)',
+        borderColor: 'rgba(5, 150, 105, 0.2)',
+        label: 'Completed'
+      },
+      'pending': {
+        icon: Clock,
+        color: '#d97706',
+        bgColor: 'rgba(217, 119, 6, 0.1)',
+        borderColor: 'rgba(217, 119, 6, 0.2)',
+        label: 'Pending'
+      },
+      'failed': {
+        icon: XCircle,
+        color: '#dc2626',
+        bgColor: 'rgba(220, 38, 38, 0.1)',
+        borderColor: 'rgba(220, 38, 38, 0.2)',
+        label: 'Failed'
+      },
+      'cancelled': {
+        icon: XCircle,
+        color: '#6b7280',
+        bgColor: 'rgba(107, 114, 128, 0.1)',
+        borderColor: 'rgba(107, 114, 128, 0.2)',
+        label: 'Cancelled'
+      }
+    };
+
+    const config = statusConfig[status?.toLowerCase()] || {
+      icon: AlertCircle,
+      color: '#6b7280',
+      bgColor: 'rgba(107, 114, 128, 0.1)',
+      borderColor: 'rgba(107, 114, 128, 0.2)',
+      label: status || 'Unknown'
+    };
+
+    const StatusIcon = config.icon;
+
+    return (
+      <span 
+        className="status-badge"
+        style={{
+          background: config.bgColor,
+          color: config.color,
+          border: `1px solid ${config.borderColor}`
+        }}
+      >
+        <StatusIcon size={14} />
+        {config.label}
+      </span>
+    );
+  };
+
+  // Calculate status statistics
+  const getStatusStats = () => {
+    const stats = {
+      completed: 0,
+      pending: 0,
+      failed: 0,
+      cancelled: 0,
+      total: donations.length
+    };
+
+    donations.forEach(donation => {
+      const status = donation.status?.toLowerCase();
+      if (stats.hasOwnProperty(status)) {
+        stats[status]++;
+      }
+    });
+
+    return stats;
+  };
+
+  const statusStats = getStatusStats();
 
   if (!user) {
     return (
@@ -135,6 +219,8 @@ const History = () => {
           <p className="subtitle">
             Tracking your contributions to make the world a better place
           </p>
+          
+          {/* Enhanced Stats Bar with Status */}
           <div className="stats-bar">
             <div className="stat">
               <span className="stat-number">{donations.length}</span>
@@ -149,6 +235,18 @@ const History = () => {
               </span>
               <span className="stat-label">Total Contributed</span>
             </div>
+            <div className="stat">
+              <span className="stat-number status-completed">
+                {statusStats.completed}
+              </span>
+              <span className="stat-label">Completed</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number status-pending">
+                {statusStats.pending}
+              </span>
+              <span className="stat-label">Pending</span>
+            </div>
           </div>
         </div>
 
@@ -162,12 +260,15 @@ const History = () => {
           <div className="donations-list">
             {donations.map((donation, index) => (
               <div
-                key={donation.id}
+                key={donation.id || donation._id}
                 className="donation-card"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="campaign-info">
-                  <h3 className="campaign-name">{donation.campaign_name}</h3>
+                  <div className="campaign-header">
+                    <h3 className="campaign-name">{donation.campaign_name}</h3>
+                    {getStatusBadge(donation.status)}
+                  </div>
                   <div className="donation-meta">
                     <div className="meta-item">
                       <CreditCard size={16} />
@@ -177,6 +278,13 @@ const History = () => {
                       <Calendar size={16} />
                       <span>{formatDate(donation.donation_date)}</span>
                     </div>
+                    {donation.transaction_id && (
+                      <div className="meta-item">
+                        <span className="transaction-id">
+                          TXN: {donation.transaction_id}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   {donation.message && (
                     <div className="donation-message">
