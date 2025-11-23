@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Heart, Target, Users, TrendingUp, User, Home, X, LogOut, Trophy, History } from "lucide-react"
+import { Heart, Target, Users, TrendingUp, User, Home, X, LogOut, Trophy, History, Calendar, MapPin } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import "../styles/campaign.css"
 
@@ -11,23 +11,19 @@ const Campaign = () => {
   const [showDonationModal, setShowDonationModal] = useState(false)
   const [selectedCampaign, setSelectedCampaign] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [activeFilter, setActiveFilter] = useState("all")
   const navigate = useNavigate()
 
   // Donation Form State
   const [donationData, setDonationData] = useState({
-    // Payment Method Section
     payment_method: "Credit Card",
     card_number: "",
     expiry_date: "",
     cvv: "",
     billing_address: "",
-
-    // Donation Details Section
     donation_amount: "",
     donation_type: "One-time",
     message: "",
-
-    // Verification Section
     age_requirement_accepted: false,
     identity_verified: false,
     privacy_policy_accepted: false,
@@ -155,32 +151,49 @@ const Campaign = () => {
     }).format(amount)
   }
 
+  const getDaysRemaining = (endDate) => {
+    const today = new Date()
+    const end = new Date(endDate || new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000))
+    const diffTime = end - today
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return diffDays > 0 ? diffDays : 0
+  }
+
+  const filteredCampaigns = campaigns.filter(campaign => {
+    if (activeFilter === "all") return true
+    if (activeFilter === "ending") return getDaysRemaining(campaign.endDate) <= 7
+    if (activeFilter === "popular") return campaign.collectedAmount / campaign.goalAmount >= 0.7
+    return true
+  })
+
   return (
-    <div className="campaign-wrapper">
+    <div className="campaign-container">
       {/* User Welcome Section */}
       {user && (
         <div className="user-welcome-section">
-          <div className="user-avatar">
-            <User size={24} />
-          </div>
-          <div className="user-info">
-            <h3 className="user-greeting">Welcome back, {user.name}</h3>
-            <p className="user-email">{user.email}</p>
+          <div className="user-profile">
+            <div className="user-avatar">
+              <User size={24} />
+            </div>
+            <div className="user-info">
+              <h3 className="user-greeting">Welcome back, {user.name}!</h3>
+              <p className="user-email">{user.email}</p>
+            </div>
           </div>
           <div className="user-actions">
-            <button className="home-button" onClick={handleHomeClick}>
+            <button className="action-btn home-button" onClick={handleHomeClick}>
               <Home size={18} />
               <span>Home</span>
             </button>
-            <button className="top-donors-button" onClick={handleViewTopDonors}>
+            <button className="action-btn top-donors-button" onClick={handleViewTopDonors}>
               <Trophy size={18} />
               <span>Top Donors</span>
             </button>
-            <button className="history-button" onClick={handleViewDonationHistory}>
+            <button className="action-btn history-button" onClick={handleViewDonationHistory}>
               <History size={18} />
-              <span>Donation History</span>
+              <span>History</span>
             </button>
-            <button className="logout-button" onClick={handleLogout}>
+            <button className="action-btn logout-button" onClick={handleLogout}>
               <LogOut size={18} />
               <span>Logout</span>
             </button>
@@ -188,74 +201,192 @@ const Campaign = () => {
         </div>
       )}
 
-      <div className="campaign-header">
-        <div className="header-icon">
-          <Heart className="heart-icon" />
-        </div>
-        <h1 className="campaign-title">Active Campaigns</h1>
-        <p className="campaign-subtitle">Join our mission to make a meaningful difference in the world</p>
-      </div>
+      {/* Campaign Header */}
+      <section className="campaign-header-section">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-badge">Active Campaigns</div>
+            <h1 className="section-title">
+              Make a Difference Through
+              <span className="gradient-text"> Giving</span>
+            </h1>
+            <p className="section-subtitle">
+              Support verified campaigns with complete transparency and real-time impact tracking
+            </p>
+          </div>
 
-      <div className="campaign-list">
-        {campaigns.map((campaign) => {
-          const progress = calculateProgress(campaign.goalAmount, campaign.collectedAmount)
-          const remainingAmount = campaign.goalAmount - campaign.collectedAmount
-
-          return (
-            <div className="campaign-card" key={campaign.id}>
-              <div className="campaign-image-container">
-                <img src={campaign.image || "/placeholder.svg"} alt={campaign.title} className="campaign-image" />
-                <div className="image-overlay"></div>
-                <div className="campaign-badge">
-                  <Target size={16} />
-                  <span>{Math.round(progress)}% Complete</span>
-                </div>
+          {/* Campaign Stats */}
+          <div className="campaign-stats">
+            <div className="stats-card">
+              <div className="stat-icon">
+                <Users size={24} />
               </div>
-
-              <div className="campaign-details">
-                <h2 className="campaign-card-title">{campaign.title}</h2>
-                <p className="campaign-description">{campaign.description}</p>
-
-                <div className="campaign-progress">
-                  <div className="progress-header">
-                    <div className="progress-stats">
-                      <div className="stat-item">
-                        <TrendingUp size={16} />
-                        <span className="stat-label">Raised</span>
-                        <span className="stat-value">{formatCurrency(campaign.collectedAmount)}</span>
-                      </div>
-                      <div className="stat-item">
-                        <Target size={16} />
-                        <span className="stat-label">Goal</span>
-                        <span className="stat-value">{formatCurrency(campaign.goalAmount)}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${progress}%` }}>
-                      <div className="progress-shine"></div>
-                    </div>
-                  </div>
-
-                  <div className="progress-footer">
-                    <span className="progress-percentage">{Math.round(progress)}% funded</span>
-                    <span className="remaining-amount">
-                      {remainingAmount > 0 ? `${formatCurrency(remainingAmount)} to go` : "Goal reached!"}
-                    </span>
-                  </div>
-                </div>
-
-                <button className="donate-button" onClick={() => handleDonateClick(campaign)}>
-                  <Heart size={18} />
-                  <span>Donate Now</span>
-                  <div className="button-shine"></div>
-                </button>
+              <div className="stat-content">
+                <h3>{campaigns.length}+</h3>
+                <p>Active Campaigns</p>
               </div>
             </div>
-          )
-        })}
-      </div>
+            <div className="stats-card">
+              <div className="stat-icon">
+                <TrendingUp size={24} />
+              </div>
+              <div className="stat-content">
+                <h3>{formatCurrency(campaigns.reduce((acc, campaign) => acc + campaign.collectedAmount, 0))}</h3>
+                <p>Total Raised</p>
+              </div>
+            </div>
+            <div className="stats-card">
+              <div className="stat-icon">
+                <Target size={24} />
+              </div>
+              <div className="stat-content">
+                <h3>{Math.round(campaigns.reduce((acc, campaign) => acc + (campaign.collectedAmount / campaign.goalAmount), 0) / campaigns.length * 100) || 0}%</h3>
+                <p>Average Progress</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Campaign Filters */}
+      <section className="filters-section">
+        <div className="section-container">
+          <div className="filters-container">
+            <div className="filter-buttons">
+              <button 
+                className={`filter-btn ${activeFilter === "all" ? "active" : ""}`}
+                onClick={() => setActiveFilter("all")}
+              >
+                All Campaigns
+              </button>
+              <button 
+                className={`filter-btn ${activeFilter === "ending" ? "active" : ""}`}
+                onClick={() => setActiveFilter("ending")}
+              >
+                Ending Soon
+              </button>
+              <button 
+                className={`filter-btn ${activeFilter === "popular" ? "active" : ""}`}
+                onClick={() => setActiveFilter("popular")}
+              >
+                Most Popular
+              </button>
+            </div>
+            <div className="results-count">
+              Showing {filteredCampaigns.length} of {campaigns.length} campaigns
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Campaign Grid */}
+      <section className="campaigns-section">
+        <div className="section-container">
+          <div className="campaigns-grid">
+            {filteredCampaigns.map((campaign) => {
+              const progress = calculateProgress(campaign.goalAmount, campaign.collectedAmount)
+              const remainingAmount = campaign.goalAmount - campaign.collectedAmount
+              const daysRemaining = getDaysRemaining(campaign.endDate)
+
+              return (
+                <div className="campaign-card" key={campaign.id}>
+                  <div className="card-header">
+                    <div className="campaign-image-container">
+                      <img src={campaign.image || "/placeholder.svg"} alt={campaign.title} className="campaign-image" />
+                      <div className="image-overlay"></div>
+                      <div className="campaign-badges">
+                        <div className="campaign-badge progress-badge">
+                          <Target size={14} />
+                          <span>{Math.round(progress)}% Funded</span>
+                        </div>
+                        {daysRemaining <= 7 && (
+                          <div className="campaign-badge urgent-badge">
+                            <span>{daysRemaining}d left</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="card-body">
+                    <div className="campaign-meta">
+                      <div className="meta-item">
+                        <MapPin size={14} />
+                        <span>{campaign.location || "Worldwide"}</span>
+                      </div>
+                      <div className="meta-item">
+                        <Calendar size={14} />
+                        <span>{daysRemaining} days left</span>
+                      </div>
+                    </div>
+
+                    <h3 className="campaign-title">{campaign.title}</h3>
+                    <p className="campaign-description">{campaign.description}</p>
+
+                    <div className="campaign-progress">
+                      <div className="progress-header">
+                        <div className="progress-stats">
+                          <div className="stat-item">
+                            <span className="stat-label">Raised</span>
+                            <span className="stat-value">{formatCurrency(campaign.collectedAmount)}</span>
+                          </div>
+                          <div className="stat-item">
+                            <span className="stat-label">Goal</span>
+                            <span className="stat-value">{formatCurrency(campaign.goalAmount)}</span>
+                          </div>
+                        </div>
+                        <span className="progress-percentage">{Math.round(progress)}%</span>
+                      </div>
+
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${progress}%` }}
+                        >
+                          <div className="progress-glow"></div>
+                        </div>
+                      </div>
+
+                      <div className="progress-footer">
+                        <span className="remaining-amount">
+                          {remainingAmount > 0 ? `${formatCurrency(remainingAmount)} to go` : "Goal reached! 🎉"}
+                        </span>
+                        <span className="donors-count">
+                          <Users size={14} />
+                          {campaign.donors || Math.floor(campaign.collectedAmount / 100)} donors
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="card-footer">
+                    <button 
+                      className="donate-button" 
+                      onClick={() => handleDonateClick(campaign)}
+                      disabled={progress >= 100}
+                    >
+                      <div className="button-content">
+                        <Heart size={18} />
+                        <span>{progress >= 100 ? "Campaign Completed" : "Support This Cause"}</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {filteredCampaigns.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <Users size={48} />
+              </div>
+              <h3>No Campaigns Found</h3>
+              <p>Try adjusting your filters or check back later for new opportunities to make a difference!</p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Donation Modal */}
       {showDonationModal && selectedCampaign && (
@@ -275,6 +406,7 @@ const Campaign = () => {
             </div>
 
             <form onSubmit={handleSubmitDonation} className="donation-form">
+              {/* Form sections remain the same as before */}
               <div className="form-section">
                 <div className="section-header">
                   <div className="section-number">01</div>
@@ -473,19 +605,10 @@ const Campaign = () => {
                       ? "Processing..."
                       : `Donate ${donationData.donation_amount ? formatCurrency(Number.parseFloat(donationData.donation_amount)) : ""}`}
                   </span>
-                  {!isSubmitting && <div className="button-glow"></div>}
                 </button>
               </div>
             </form>
           </div>
-        </div>
-      )}
-
-      {campaigns.length === 0 && (
-        <div className="empty-state">
-          <Users size={48} />
-          <h3>No Active Campaigns</h3>
-          <p>Check back soon for new opportunities to make a difference!</p>
         </div>
       )}
     </div>

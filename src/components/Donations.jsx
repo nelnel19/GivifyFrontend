@@ -70,9 +70,17 @@ const Donations = () => {
     return "top-ten"
   }
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-PH", {
+      style: "currency",
+      currency: "PHP",
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
   if (loading) {
     return (
-      <div className="donations-container">
+      <div className="donations-wrapper">
         <div className="loading-spinner">
           <div className="spinner"></div>
           <p>Loading top donors...</p>
@@ -83,97 +91,141 @@ const Donations = () => {
 
   return (
     <div className="donations-wrapper">
-      {/* User Welcome Section - Same as Campaign */}
+      {/* User Welcome Section - Same as History */}
       {user && (
         <div className="user-welcome-section">
-          <div className="user-avatar">
-            <User size={24} />
-          </div>
-          <div className="user-info">
-            <h3 className="user-greeting">Welcome back, {user.name}</h3>
-            <p className="user-email">{user.email}</p>
-          </div>
-          <div className="user-actions">
-            <button className="home-button" onClick={handleHomeClick}>
-              <Home size={18} />
-              <span>Home</span>
-            </button>
-            <button className="campaigns-button" onClick={handleViewCampaigns}>
-              <Target size={18} />
-              <span>Campaigns</span>
-            </button>
-            <button className="history-button" onClick={handleViewDonationHistory}>
-              <History size={18} />
-              <span>Donation History</span>
-            </button>
-            <button className="logout-button" onClick={handleLogout}>
-              <LogOut size={18} />
-              <span>Logout</span>
-            </button>
+          <div className="section-container">
+            <div className="user-profile">
+              <div className="user-avatar">
+                <User size={24} />
+              </div>
+              <div className="user-info">
+                <h3 className="user-greeting">Welcome back, {user.name}!</h3>
+                <p className="user-email">{user.email}</p>
+              </div>
+            </div>
+            <div className="user-actions">
+              <button className="action-btn home-button" onClick={handleHomeClick}>
+                <Home size={18} />
+                <span>Home</span>
+              </button>
+              <button className="action-btn campaigns-button" onClick={handleViewCampaigns}>
+                <Target size={18} />
+                <span>Campaigns</span>
+              </button>
+              <button className="action-btn history-button" onClick={handleViewDonationHistory}>
+                <History size={18} />
+                <span>History</span>
+              </button>
+              <button className="action-btn logout-button" onClick={handleLogout}>
+                <LogOut size={18} />
+                <span>Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="donations-container">
-        <div className="header-section">
-          <div className="header-icon">
-            <Trophy className="trophy-header-icon" />
+      {/* Donations Header Section - Matching History */}
+      <section className="donations-header-section">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-badge">Top Donors</div>
+            <h1 className="section-title">
+              Generosity
+              <span className="gradient-text"> Leaderboard</span>
+            </h1>
+            <p className="section-subtitle">
+              Celebrating our most dedicated supporters and their incredible contributions to meaningful causes
+            </p>
           </div>
-          <h1 className="title">Top Donors Leaderboard</h1>
-          <p className="subtitle">Celebrating our most generous supporters</p>
-          <div className="stats-bar">
-            <div className="stat">
-              <span className="stat-number">{donations.length}</span>
-              <span className="stat-label">Total Donors</span>
+
+          {/* Donations Stats - Matching History */}
+          <div className="donations-stats">
+            <div className="stats-card">
+              <div className="stat-icon">
+                <Trophy size={24} />
+              </div>
+              <div className="stat-content">
+                <h3>{donations.length}</h3>
+                <p>Total Donors</p>
+              </div>
             </div>
-            <div className="stat">
-              <span className="stat-number">
-                ₱{donations.reduce((sum, d) => sum + d.donation_amount, 0).toLocaleString()}
-              </span>
-              <span className="stat-label">Total Raised</span>
+            <div className="stats-card">
+              <div className="stat-icon">
+                <Award size={24} />
+              </div>
+              <div className="stat-content">
+                <h3>{formatCurrency(donations.reduce((sum, d) => sum + d.donation_amount, 0))}</h3>
+                <p>Total Raised</p>
+              </div>
+            </div>
+            <div className="stats-card">
+              <div className="stat-icon">
+                <Crown size={24} />
+              </div>
+              <div className="stat-content">
+                <h3>{Math.min(donations.length, 10)}+</h3>
+                <p>Top Supporters</p>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {donations.length === 0 ? (
-          <div className="no-donations">
-            <Award size={48} className="empty-icon" />
-            <p>No donations found yet.</p>
-            <p>Be the first to make a difference!</p>
-          </div>
-        ) : (
-          <div className="donations-list">
-            {donations.slice(0, 10).map((donation, index) => {
-              const rank = index + 1
-              return (
-                <div
-                  key={donation.id}
-                  className={`donation-card ${getRankClass(rank)}`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="rank-section">
-                    {getTrophyIcon(rank)}
-                    <span className="rank-number">#{rank}</span>
-                  </div>
+      {/* Donations Section - Matching History */}
+      <section className="donations-section">
+        <div className="section-container">
+          {donations.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <Trophy size={48} />
+              </div>
+              <h3>No Donations Yet</h3>
+              <p>Be the first to make a difference and appear on our leaderboard!</p>
+              <button className="action-btn campaigns-button" onClick={handleViewCampaigns}>
+                <Target size={18} />
+                <span>Start Donating</span>
+              </button>
+            </div>
+          ) : (
+            <div className="donations-grid">
+              {donations.slice(0, 10).map((donation, index) => {
+                const rank = index + 1
+                return (
+                  <div
+                    key={donation.id || donation._id}
+                    className={`donation-card ${getRankClass(rank)}`}
+                  >
+                    <div className="rank-section">
+                      {getTrophyIcon(rank)}
+                      <span className="rank-number">#{rank}</span>
+                    </div>
 
-                  <div className="donation-details">
-                    <h3 className="donor-name">{donation.user_name}</h3>
-                    <p className="campaign-name">
-                      <span className="campaign-label">Campaign:</span>
-                      <span className="campaign-value">{donation.campaign_name}</span>
-                    </p>
-                  </div>
+                    <div className="donation-info">
+                      <h3 className="donor-name">{donation.user_name}</h3>
+                      <div className="donation-meta">
+                        <div className="meta-item">
+                          <Target size={16} />
+                          <span>{donation.campaign_name}</span>
+                        </div>
+                        <div className="meta-item">
+                          <Award size={16} />
+                          <span>{formatCurrency(donation.donation_amount)}</span>
+                        </div>
+                      </div>
+                    </div>
 
-                  <div className="donation-amount">
-                    <span className="currency">₱</span>
-                    <span className="amount">{donation.donation_amount.toLocaleString()}</span>
+                    <div className="donation-amount">
+                      <span className="amount">{formatCurrency(donation.donation_amount)}</span>
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   )
 }
